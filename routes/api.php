@@ -22,3 +22,5 @@ Route::get('/productlist',[Homecontroller::class, 'productlist']);
 Route::get('/cartitems',[Homecontroller::class, 'cartItems']);
 Route::delete('/removecartitem/{id}', [Homecontroller::class, 'removeCartItem']);
 Route::post('/addtocart',[Homecontroller::class, 'addToCart']);
+Route::put('/updatecartitem/{id}', [Homecontroller::class, 'updateCartItem']);
+

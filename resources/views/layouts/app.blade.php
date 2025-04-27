@@ -9,7 +9,7 @@
     <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
 </head>
 
-<body class="bg-gray-100 text-gray-800">
+<body class="bg-gray-100 text-gray-800 relative">
 
     <!-- Navbar -->
     <nav class="bg-[#0B0B0B] shadow-md">
@@ -29,7 +29,7 @@
       @yield('content')
 
     <!-- Footer -->
-    <footer class="bg-white mt-12 py-6 text-center shadow-inner">
+    <footer class="bg-white mt-12 py-6 text-center shadow-inner w-full">
         <p class="text-gray-500">&copy; 2025 BuyNest . All rights reserved.</p>
     </footer>
 

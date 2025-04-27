@@ -18,46 +18,49 @@
             </button>
         </div>
     </div>
-
+    <!-- Error Section -->
+     <div id="success_error" class="hidden">
+    <div  id="success_message" class="flex items-center p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg border border-green-300" role="alert">
+        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" d="M2 10a8 8 0 1116 0A8 8 0 012 10zm8-5a1 1 0 00-1 1v4H7a1 1 0 000 2h4v4a1 1 0 002 0v-4h4a1 1 0 000-2h-4V6a1 1 0 00-1-1h-2z" clip-rule="evenodd" />
+        </svg>
+        <span class="font-medium">Success alert!</span> Cart Item Removed
+      </div>
+      </div>
+      <div id="error" class="hidden">
+      <div id="error_message" class="flex items-center p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg border border-red-300" role="alert">
+        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-1 1v3a1 1 0 102 0V8a1 1 0 00-1-1zm-1 7a1 1 0 112 0 1 1 0 01-2 0z" clip-rule="evenodd" />
+        </svg>
+        <span class="font-medium">Error alert!</span> Cart Item Not Removed
+      </div>    
+      </div>
     <!-- Product Display -->
     <div id="item_list" class="grid gap-y-3">
 
-        <div class="bg-white rounded-lg shadow-md p-6 flex flex-col md:flex-row gap-6">
-           
-            <div class="flex-1">
-                <img src="https://via.placeholder.com/400" alt="Product Image" class="rounded-lg w-full">
-            </div>
-    
-          
-            <div class="flex-1 space-y-4">
-                <h2 class="text-2xl font-semibold">Wireless Headphones</h2>
-                <p class="text-gray-600">Experience high-quality sound with our wireless headphones. Comfortable design and long battery life.</p>
-                <p class="text-xl font-bold text-green-600">₹2,999</p>
-    
-               
-                <div class="flex items-center gap-4">
-                    <label for="quantity" class="font-medium">Qty:</label>
-                    <input type="number" id="quantity" min="1" class="border rounded px-2 w-20" >
-                    {{-- <button  class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
-                        Add to Cart
-                    </button> --}}
-                </div>
-    
-     
-               
-            </div>
-        </div>
+       <div>
+        <p class="text-center font-bold text-lg">Empty cart</p>
+       </div>
     </div>
-
+      
 </div>
 @endsection
 @section('script')
 <script>
-    (async function getData() {
+    document.addEventListener('DOMContentLoaded', () => {
+        getData();
+    });
+    async function getData() {
         response = await fetch('http://127.0.0.1:8000/api/cartitems')
         json = await response.json()
+        console.log(json)
         let html = ''
-       
+        if(json.data.length==0){
+            html = `<div>
+            <p class="text-center font-bold text-lg">Empty cart</p>
+           </div>`
+           document.getElementById('item_count').innerHTML ='0';
+        }else{
         json.data.forEach(element => {
             
 
@@ -75,23 +78,123 @@
            
             <div class="flex items-center gap-4">
                 <label for="quantity" class="font-medium">Qty:</label>
-                <input type="number" id="quantity" min="1" value="${element['quantity']}" class="border rounded px-2 w-20" >
-                 <button  class="bg-slate-800 hover:bg-slate-600 text-white px-4 py-2 rounded">
+                <input type="number" onchange="quantitychange(this)" data-id="${element['id']}" id="quantity" min="1" value="${element['quantity']}" class="border rounded px-2 w-20" >
+                 <button onclick="removeitem(this)" data-id="${element['id']}" class="bg-slate-800 hover:bg-slate-600 text-white px-4 py-2 rounded">
                     Remove Item
                 </button> 
-            </div>
-
- 
-           
-        </div>
+            </div> 
+         </div>
     </div>`;
+        
+    
 
-
-    document.getElementById('item_list').innerHTML = html;
-    document.getElementById('item_count').innerHTML = json.data.length;
 });
+html+=`    <div class="bg-white rounded-lg shadow-md p-6 flex flex-col  gap-6">
+      <div class="bg-gray-50 p-6 rounded-2xl shadow-md">
+        <h3 class="text-xl font-semibold mb-4 text-gray-700">Order Summary</h3>
+        
+        <div class="flex justify-between mb-2">
+          <span class="text-gray-600">Subtotal</span>
+          <span class="font-medium text-gray-800">₹${json.totalPrice}</span>
+        </div>
 
-    })()
+        <div class="flex justify-between mb-2">
+          <span class="text-gray-600">Shipping</span>
+          <span class="font-medium text-gray-800">₹5</span>
+        </div>
+
+        <div class="flex justify-between border-t pt-4 mt-4">
+          <span class="text-lg font-bold text-gray-700">Total</span>
+          <span class="text-lg font-bold text-gray-900">₹${json.totalPrice+5}</span>
+        </div>
+
+        <button class="mt-6 w-full bg-slate-900 hover:bg-slate-600 text-white font-semibold py-3 rounded-xl transition duration-300">
+          Proceed to Payment
+        </button>
+      </div>
+    </div>`;
+document.getElementById('item_list').innerHTML = html;
+document.getElementById('item_count').innerHTML = json.data.length;
+    }
+
+    }
+
+ async  function removeitem(e){
+        //console.log(e.getAttribute('data-id'))
+       response = await fetch(`http://127.0.0.1:8000/api/removecartitem/${e.getAttribute('data-id')}`,{
+        method: 'DELETE', 
+        headers: { 
+            
+            'Accept': 'application/json',
+           
+        }
+       });
+       json = await response.json();
+       
+       if(json.data==true){
+       let success_error= document.getElementById('success_error');
+        success_error.classList.remove('hidden');
+        setTimeout(()=>{
+            success_error.classList.add('hidden');
+        },3000)
+       
+        getData()
+      
+       }else{
+        let error = document.getElementById('error');
+        error.classList.remove('hidden');
+        setTimeout(()=>{
+            error.classList.add('hidden');
+        },3000)
+       }
+    }
+
+   async function quantitychange(e){
+            const id = e.getAttribute('data-id'); //product id 
+        if(e.value<1){
+                  e.value=1;
+                  console.log(e.value)
+                }else{
+                    
+                  console.log(JSON.stringify({
+                       'quantity': parseInt(e.value)
+                    }))
+            const id = e.getAttribute('data-id');
+            let response= await   fetch(`http://127.0.0.1:8000/api/updatecartitem/${id}`,{
+                    method:'PUT', 
+                    
+                    headers: { 
+            
+                        'Accept': 'application/json',
+                        'content-type': 'application/json'
+                    
+                    },
+                    body:JSON.stringify({
+                        'quantity': parseInt(e.value)
+                    })
+                })
+                json = await response.json();
+                if(json.data==true){
+       let success_error= document.getElementById('success_error');
+        success_error.classList.remove('hidden');
+        document.getElementById('success_message').innerHTML = json.message;
+        setTimeout(()=>{
+            success_error.classList.add('hidden');
+        },3000)
+       
+        getData()
+      
+       }else{
+        let error = document.getElementById('error');
+        error.classList.remove('hidden');
+        document.getElementById('error_message').innerHTML = json.message;
+        setTimeout(()=>{
+            error.classList.add('hidden');
+        },3000)
+       }
+              }   
+           
+    }
 
 </script>
 @endsection

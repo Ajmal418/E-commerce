@@ -72,9 +72,9 @@ class HomeController extends Controller
         ->leftJoin('product_models','product_models.id','=','cart_items.product_id')
         ->where('cart_items.user_id',1)
         ->get()->toArray();
-          
         $min= array_map(function($item){ 
-          
+            
+           
            $item['image'] =  array_map(function($arr){
                 if(file_exists(public_path().'/assets/product/'.$arr)){
                         $arr=asset('assets/product/'.$arr);
@@ -83,17 +83,24 @@ class HomeController extends Controller
                     }
                     
                },json_decode($item['image']));
+               $item['price'] =  $item['price'] * $item['quantity'];
 
+              
+               
                return $item;
 
         },json_decode(json_encode($data), true));
-
+            $totalPrice = 0;
+        foreach ($min as $key => &$value) {
+            $totalPrice += $value['price'];
+        }
       if(count($data)> 0){
 
         return response()->json([
 
             'message' => 'Cart List',
-            'data' => $min
+            'data' => $min,
+            'totalPrice'=>$totalPrice
 
         ], 200);
       }else{
@@ -102,7 +109,7 @@ class HomeController extends Controller
             'message' => 'Cart List',
             'data' => []
 
-        ], 200);
+        ], 409);
       }
         
     
@@ -115,13 +122,56 @@ class HomeController extends Controller
 
     public function  removeCartItem($id){
         $data=CartItem::where('product_id',$id)->delete();
+        if($data){
 
-        return response()->json([
-
-            'message' => 'Cart Item Removed',
-            'data' => $data
-
-        ], 200);
+            return response()->json([
     
+                'message' => 'Cart Item Removed',
+                'data' => $data
+    
+            ], 200);
+        }else{
+
+            return response()->json([
+    
+                'message' => 'Cart Item  Not  Removed',
+                'data' => false
+     
+            ], 409);
+        }
+    
+    }
+    public function updateCartItem(Request $request ,$id){
+        $quantity=$request->quantity;
+        if($quantity < 1){
+            return response()->json([
+
+                'message' => 'Invalid Quantity',
+                'data' => false
+
+            ], 409);
+        }else{
+
+        
+        $data=cartItem::where('product_id', $id)->update(['quantity' => $request->quantity]);
+        if($data){
+
+            return response()->json([
+
+                'message' => 'Quantity is  Updated',
+                'data' => $data
+
+            ], 200);
+        }else{
+
+            return response()->json([
+
+                'message' => 'Quantity is  Not  Updated',
+                'data' => false
+
+            ], 409);
+        }
+        }
+
     }
 }
