@@ -5,28 +5,7 @@
         <h3 class="text-3xl font-semibold text-center mb-10">Featured Products</h3>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8" id="product">
-            <!-- Product Card -->
-            {{--   <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                <img src="https://via.placeholder.com/300" alt="Product" class="w-full h-48 object-cover">
-                <div class="p-4">
-                    <h4 class="text-lg font-semibold">Product Name</h4>
-                    <p class="text-gray-500 mb-2">₹2,499</p>
-                    <button class="bg-slate-800 text-white px-4 py-2 rounded hover:bg-slate-600 w-full">Add to
-                        Cart</button>
-                </div>
-            </div>
-
-            <!-- Duplicate this card for more products -->
-            <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                <img src="https://via.placeholder.com/300" alt="Product" class="w-full h-48 object-cover">
-                <div class="p-4">
-                    <h4 class="text-lg font-semibold">Product Name</h4>
-                    <p class="text-gray-500 mb-2">₹1,299</p>
-                    <button class="bg-slate-800 text-white px-4 py-2 rounded hover:bg-slate-600 w-full">Add to
-                        Cart</button>
-                </div>
-            </div> --}}
-            <!-- Add as many product cards as needed -->
+           
         </div>
     </section>
 @endsection
