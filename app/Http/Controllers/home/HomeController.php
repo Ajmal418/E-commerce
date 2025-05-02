@@ -232,7 +232,7 @@ class HomeController extends Controller
             'status' => 'error',
             'message' => 'Something went wrong.',
             'error' => $e->getMessage()
-        ], 500); //throw $th;
+        ], 500); 
     } 
         
     }
@@ -264,7 +264,7 @@ class HomeController extends Controller
             }
            
            $output= $cart->where('user_id', 1)->delete();
-             log::message("cart is empty ${$output}");   
+             log::message("cart is empty {$output}");   
             if($data){
 
                 return response()->json([

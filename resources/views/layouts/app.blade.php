@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>BuyNest - Home</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    {{-- <script src="https://cdn.tailwindcss.com"></script> --}}
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
 </head>
@@ -32,7 +32,8 @@
     <footer class="bg-white mt-12 py-6 text-center shadow-inner w-full">
         <p class="text-gray-500">&copy; 2025 BuyNest . All rights reserved.</p>
     </footer>
-
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="{{asset('js/app.js')}}" type="module"></script>
     @yield('script')
     
 </body>

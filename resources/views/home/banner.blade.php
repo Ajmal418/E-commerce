@@ -1,5 +1,5 @@
 <section
-        class=" text-white  py-20 px-4 w-full bg-cover  bg-no-repeat  bg-[url('{{ asset('assets/images/banner.jpg') }}')]">
+        class=" text-white  py-20 px-4 w-full bg-cover  bg-no-repeat  bg-banner">
         <h2 class="text-4xl text-start font-bold mb-4">Find Your Style</h2>
         <p class="text-lg mb-6 text-start">Top quality products at the best prices. Shop now and enjoy exclusive deals.
         </p>
